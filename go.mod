@@ -1,4 +1,4 @@
-module boids
+module github.com/bioerrorlog/boids-ebitengine
 
 go 1.20
 

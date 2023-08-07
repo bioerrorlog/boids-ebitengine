@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/bioerrorlog/boids"
+	"github.com/bioerrorlog/boids-ebitengine/boids"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
