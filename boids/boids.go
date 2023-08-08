@@ -17,15 +17,15 @@ func (b *Boid) Update(boids []*Boid) {
 
 func (b *Boid) alignment(boids []*Boid) vector.Vec2 {
 	// TODO
-	return vector.Vec2{0, 0}
+	return vector.Vec2{X: 0, Y: 0}
 }
 
 func (b *Boid) cohesion(boids []*Boid) vector.Vec2 {
 	// TODO
-	return vector.Vec2{0, 0}
+	return vector.Vec2{X: 0, Y: 0}
 }
 
 func (b *Boid) separation(boids []*Boid) vector.Vec2 {
 	// TODO
-	return vector.Vec2{0, 0}
+	return vector.Vec2{X: 0, Y: 0}
 }
