@@ -34,7 +34,7 @@ func (v Vec2) Normalize() Vec2 {
 	return Vec2{0, 0}
 }
 
-func (v Vec2) limit(max float64) Vec2 {
+func (v Vec2) Limit(max float64) Vec2 {
 	if v.Length() > max {
 		return v.Normalize().Mul(max)
 	}
