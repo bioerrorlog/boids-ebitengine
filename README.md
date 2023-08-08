@@ -1,3 +1,3 @@
-# (WIP) boids_ebitengine
+# boids-ebitengine
 
 Boids flocking in Ebitengine.
