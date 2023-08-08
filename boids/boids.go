@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	moveSpeed                 = 600
-	perceptionRadius          = 50
-	steerForce                = 50.0
-	alignmentForce            = 1.2
-	cohesionForce             = 0.5
-	separationForce           = 1.0
-	centralizationForce       = 0.5
-	centralizationForceRadius = 10.0
+	moveSpeed                 = 20
+	perceptionRadius          = 100
+	steerForce                = 1
+	alignmentForce            = 0.1
+	cohesionForce             = 0.
+	separationForce           = 0.1
+	centralizationForce       = 1.0
+	centralizationForceRadius = 500
 )
 
 type Boid struct {
@@ -47,7 +47,7 @@ func (b *Boid) Update(boids []*Boid) {
 	separation := b.separation(boids)
 	centering := b.centralization()
 
-	b.velocity = b.velocity.Add(alignment).Add(cohesion).Add(separation).Add(centering).Limit(2)
+	b.velocity = b.velocity.Add(alignment).Add(cohesion).Add(separation).Add(centering).Limit(moveSpeed)
 	b.position = b.position.Add(b.velocity)
 }
 
