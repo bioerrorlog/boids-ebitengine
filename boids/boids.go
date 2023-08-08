@@ -27,16 +27,51 @@ func (b *Boid) Update(boids []*Boid) {
 }
 
 func (b *Boid) alignment(boids []*Boid) vector.Vec2 {
-	// TODO
-	return vector.Vec2{X: 0, Y: 0}
+	var sum vector.Vec2
+	var count int
+	for _, other := range boids {
+		if b != other {
+			sum = sum.Add(other.velocity)
+			count++
+		}
+	}
+
+	if count > 0 {
+		avg := sum.Div(float64(count))
+		return avg.Sub(b.velocity).Limit(0.05)
+	}
+
+	return vector.Vec2{}
 }
 
 func (b *Boid) cohesion(boids []*Boid) vector.Vec2 {
-	// TODO
-	return vector.Vec2{X: 0, Y: 0}
+	var sum vector.Vec2
+	var count int
+	for _, other := range boids {
+		if b != other {
+			sum = sum.Add(other.position)
+			count++
+		}
+	}
+
+	if count > 0 {
+		avg := sum.Div(float64(count))
+		return avg.Sub(b.position).Limit(0.05)
+	}
+
+	return vector.Vec2{}
 }
 
 func (b *Boid) separation(boids []*Boid) vector.Vec2 {
-	// TODO
-	return vector.Vec2{X: 0, Y: 0}
+	var sum vector.Vec2
+	for _, other := range boids {
+		if b != other {
+			diff := b.position.Sub(other.position)
+			if diff.Length() < 30 {
+				sum = sum.Add(diff.Normalize().Div(diff.Length()))
+			}
+		}
+	}
+
+	return sum.Limit(0.5)
 }
