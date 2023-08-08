@@ -1,9 +1,11 @@
 package boids
 
 import (
+	"image/color"
 	"math/rand"
 
 	"github.com/bioerrorlog/boids-ebitengine/vector"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Boid struct {
@@ -15,6 +17,16 @@ func NewBoid(x, y float64) *Boid {
 		position: vector.Vec2{X: x, Y: y},
 		velocity: vector.Vec2{X: rand.Float64()*2 - 1, Y: rand.Float64()*2 - 1},
 	}
+}
+
+func (b *Boid) Draw(screen *ebiten.Image) {
+	boidImage := ebiten.NewImage(20, 20)
+	boidImage.Fill(color.White)
+
+	opts := &ebiten.DrawImageOptions{}
+	opts.GeoM.Translate(b.position.X, b.position.Y)
+
+	screen.DrawImage(boidImage, opts)
 }
 
 func (b *Boid) Update(boids []*Boid) {

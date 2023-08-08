@@ -42,6 +42,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// Backgroud
 	screen.Fill(color.RGBA{15, 2, 22, 0xff})
 
+	// Boids
+	for _, b := range g.boids {
+		b.Draw(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
