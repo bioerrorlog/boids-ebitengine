@@ -4,7 +4,6 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 const (
@@ -12,7 +11,9 @@ const (
 	ScreenHeight = 1080
 )
 
-type Game struct{}
+type Game struct {
+	boids []*Boid
+}
 
 func NewGame() (*Game, error) {
 	g := &Game{}
@@ -20,12 +21,16 @@ func NewGame() (*Game, error) {
 }
 
 func (g *Game) Update() error {
+	for _, b := range g.boids {
+		b.Update(g.boids)
+	}
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	// Backgroud
 	screen.Fill(color.RGBA{15, 2, 22, 0xff})
-	ebitenutil.DebugPrint(screen, "Hello, World!")
+
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
