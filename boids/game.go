@@ -4,6 +4,7 @@ import (
 	"image/color"
 	"math/rand"
 
+	"github.com/bioerrorlog/boids-ebitengine/vector"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -26,6 +27,7 @@ func NewGame() (*Game, error) {
 		g.boids[i] = NewBoid(
 			rand.Float64()*ScreenWidth,
 			rand.Float64()*ScreenHeight,
+			vector.Vec2{X: ScreenWidth / 2, Y: ScreenHeight / 2},
 		)
 	}
 	return g, nil

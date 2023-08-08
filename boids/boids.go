@@ -9,22 +9,25 @@ import (
 )
 
 const (
-	moveSpeed        = 600
-	perceptionRadius = 50
-	steerForce       = 50.0
-	alignmentForce   = 1.2
-	cohesionForce    = 0.5
-	separationForce  = 1.0
+	moveSpeed                 = 600
+	perceptionRadius          = 50
+	steerForce                = 50.0
+	alignmentForce            = 1.2
+	cohesionForce             = 0.5
+	separationForce           = 1.0
+	centralizationForce       = 0.5
+	centralizationForceRadius = 10.0
 )
 
 type Boid struct {
-	position, velocity vector.Vec2
+	position, velocity, targetCenter vector.Vec2
 }
 
-func NewBoid(x, y float64) *Boid {
+func NewBoid(x, y float64, targetCenter vector.Vec2) *Boid {
 	return &Boid{
-		position: vector.Vec2{X: x, Y: y},
-		velocity: vector.Vec2{X: rand.Float64()*2 - 1, Y: rand.Float64()*2 - 1},
+		position:     vector.Vec2{X: x, Y: y},
+		velocity:     vector.Vec2{X: rand.Float64()*2 - 1, Y: rand.Float64()*2 - 1},
+		targetCenter: targetCenter,
 	}
 }
 
@@ -42,9 +45,14 @@ func (b *Boid) Update(boids []*Boid) {
 	alignment := b.alignment(boids)
 	cohesion := b.cohesion(boids)
 	separation := b.separation(boids)
+	centering := b.centralization()
 
-	b.velocity = b.velocity.Add(alignment).Add(cohesion).Add(separation).Limit(2)
+	b.velocity = b.velocity.Add(alignment).Add(cohesion).Add(separation).Add(centering).Limit(2)
 	b.position = b.position.Add(b.velocity)
+}
+
+func (b *Boid) SetTargetCenter(center vector.Vec2) {
+	b.targetCenter = center
 }
 
 func (b *Boid) alignment(boids []*Boid) vector.Vec2 {
@@ -92,6 +100,14 @@ func (b *Boid) separation(boids []*Boid) vector.Vec2 {
 	}
 	avg := sum.Div(float64(len(closeNeighbors)))
 	return b.steer(avg.Normalize().Mul(moveSpeed)).Mul(separationForce)
+}
+
+func (b *Boid) centralization() vector.Vec2 {
+	if b.position.DistanceTo(b.targetCenter) < centralizationForceRadius {
+		return vector.Vec2{}
+	}
+	desired := b.targetCenter.Sub(b.position).Normalize().Mul(moveSpeed)
+	return b.steer(desired).Mul(centralizationForce)
 }
 
 func (b *Boid) steer(target vector.Vec2) vector.Vec2 {
