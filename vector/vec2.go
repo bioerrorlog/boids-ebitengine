@@ -40,3 +40,8 @@ func (v Vec2) Limit(max float64) Vec2 {
 	}
 	return v
 }
+
+func (v Vec2) DistanceTo(other Vec2) float64 {
+	diff := v.Sub(other)
+	return diff.Length()
+}

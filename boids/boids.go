@@ -8,6 +8,15 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+const (
+	moveSpeed        = 600
+	perceptionRadius = 50
+	steerForce       = 50.0
+	alignmentForce   = 1.2
+	cohesionForce    = 0.5
+	separationForce  = 1.0
+)
+
 type Boid struct {
 	position, velocity vector.Vec2
 }
@@ -40,50 +49,52 @@ func (b *Boid) Update(boids []*Boid) {
 
 func (b *Boid) alignment(boids []*Boid) vector.Vec2 {
 	var sum vector.Vec2
-	var count int
+	if len(boids) == 0 {
+		return sum
+	}
 	for _, other := range boids {
 		if b != other {
 			sum = sum.Add(other.velocity)
-			count++
 		}
 	}
-
-	if count > 0 {
-		avg := sum.Div(float64(count))
-		return avg.Sub(b.velocity).Limit(0.05)
-	}
-
-	return vector.Vec2{}
+	avg := sum.Div(float64(len(boids) - 1))
+	return b.steer(avg.Normalize().Mul(moveSpeed)).Mul(alignmentForce)
 }
 
 func (b *Boid) cohesion(boids []*Boid) vector.Vec2 {
 	var sum vector.Vec2
-	var count int
+	if len(boids) == 0 {
+		return sum
+	}
 	for _, other := range boids {
 		if b != other {
 			sum = sum.Add(other.position)
-			count++
 		}
 	}
-
-	if count > 0 {
-		avg := sum.Div(float64(count))
-		return avg.Sub(b.position).Limit(0.05)
-	}
-
-	return vector.Vec2{}
+	avg := sum.Div(float64(len(boids) - 1))
+	return b.steer(avg.Sub(b.position).Normalize().Mul(moveSpeed)).Mul(cohesionForce)
 }
 
 func (b *Boid) separation(boids []*Boid) vector.Vec2 {
 	var sum vector.Vec2
+	var closeNeighbors []*Boid
 	for _, other := range boids {
-		if b != other {
-			diff := b.position.Sub(other.position)
-			if diff.Length() < 30 {
-				sum = sum.Add(diff.Normalize().Div(diff.Length()))
-			}
+		if b != other && b.position.DistanceTo(other.position) < perceptionRadius/2 {
+			closeNeighbors = append(closeNeighbors, other)
 		}
 	}
+	if len(closeNeighbors) == 0 {
+		return sum
+	}
+	for _, other := range closeNeighbors {
+		diff := b.position.Sub(other.position)
+		sum = sum.Add(diff.Normalize().Div(diff.Length()))
+	}
+	avg := sum.Div(float64(len(closeNeighbors)))
+	return b.steer(avg.Normalize().Mul(moveSpeed)).Mul(separationForce)
+}
 
-	return sum.Limit(0.5)
+func (b *Boid) steer(target vector.Vec2) vector.Vec2 {
+	steer := target.Sub(b.velocity)
+	return steer.Normalize().Mul(steerForce)
 }
