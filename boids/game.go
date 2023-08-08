@@ -2,6 +2,7 @@ package boids
 
 import (
 	"image/color"
+	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -9,6 +10,7 @@ import (
 const (
 	ScreenWidth  = 1920
 	ScreenHeight = 1080
+	boidCount    = 100
 )
 
 type Game struct {
@@ -16,7 +18,16 @@ type Game struct {
 }
 
 func NewGame() (*Game, error) {
-	g := &Game{}
+	g := &Game{
+		boids: make([]*Boid, boidCount),
+	}
+
+	for i := range g.boids {
+		g.boids[i] = NewBoid(
+			rand.Float64()*ScreenWidth,
+			rand.Float64()*ScreenHeight,
+		)
+	}
 	return g, nil
 }
 
