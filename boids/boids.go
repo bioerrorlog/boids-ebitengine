@@ -14,8 +14,8 @@ const (
 	perceptionRadius          = 100
 	steerForce                = 1
 	alignmentForce            = 0.1
-	cohesionForce             = 0.1
-	separationForce           = 0.1
+	cohesionForce             = 0.05
+	separationForce           = 0.3
 	centralizationForce       = 0.4
 	centralizationForceRadius = 200
 )
