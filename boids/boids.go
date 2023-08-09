@@ -16,7 +16,7 @@ const (
 	alignmentForce            = 0.1
 	cohesionForce             = 0.05
 	separationForce           = 0.3
-	centralizationForce       = 0.4
+	centralizationForce       = 0.3
 	centralizationForceRadius = 200
 )
 
