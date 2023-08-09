@@ -111,6 +111,7 @@ func (b *Boid) steer(target vector.Vec2) vector.Vec2 {
 	steer := target.Sub(b.velocity)
 	return steer.Normalize().Mul(steerForce)
 }
+
 func (b *Boid) getNeighbors(boids []*Boid) []*Boid {
 	var neighbors []*Boid
 	for _, other := range boids {
