@@ -13,10 +13,10 @@ const (
 	perceptionRadius          = 100
 	steerForce                = 1
 	alignmentForce            = 0.1
-	cohesionForce             = 0.
+	cohesionForce             = 0.1
 	separationForce           = 0.1
-	centralizationForce       = 1.0
-	centralizationForceRadius = 500
+	centralizationForce       = 0.4
+	centralizationForceRadius = 200
 )
 
 type Boid struct {
@@ -42,9 +42,11 @@ func (b *Boid) Draw(screen *ebiten.Image) {
 }
 
 func (b *Boid) Update(boids []*Boid) {
-	alignment := b.alignment(boids)
-	cohesion := b.cohesion(boids)
-	separation := b.separation(boids)
+	neighbors := b.getNeighbors(boids)
+
+	alignment := b.alignment(neighbors)
+	cohesion := b.cohesion(neighbors)
+	separation := b.separation(neighbors)
 	centering := b.centralization()
 
 	b.velocity = b.velocity.Add(alignment).Add(cohesion).Add(separation).Add(centering).Limit(moveSpeed)
@@ -65,7 +67,7 @@ func (b *Boid) alignment(boids []*Boid) vector.Vec2 {
 			sum = sum.Add(other.velocity)
 		}
 	}
-	avg := sum.Div(float64(len(boids) - 1))
+	avg := sum.Div(float64(len(boids)))
 	return b.steer(avg.Normalize().Mul(moveSpeed)).Mul(alignmentForce)
 }
 
@@ -79,7 +81,7 @@ func (b *Boid) cohesion(boids []*Boid) vector.Vec2 {
 			sum = sum.Add(other.position)
 		}
 	}
-	avg := sum.Div(float64(len(boids) - 1))
+	avg := sum.Div(float64(len(boids)))
 	return b.steer(avg.Sub(b.position).Normalize().Mul(moveSpeed)).Mul(cohesionForce)
 }
 
@@ -113,4 +115,13 @@ func (b *Boid) centralization() vector.Vec2 {
 func (b *Boid) steer(target vector.Vec2) vector.Vec2 {
 	steer := target.Sub(b.velocity)
 	return steer.Normalize().Mul(steerForce)
+}
+func (b *Boid) getNeighbors(boids []*Boid) []*Boid {
+	var neighbors []*Boid
+	for _, other := range boids {
+		if b != other && b.position.DistanceTo(other.position) < perceptionRadius {
+			neighbors = append(neighbors, other)
+		}
+	}
+	return neighbors
 }
