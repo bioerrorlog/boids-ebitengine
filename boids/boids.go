@@ -6,6 +6,7 @@ import (
 
 	"github.com/bioerrorlog/boids-ebitengine/vector"
 	"github.com/hajimehoshi/ebiten/v2"
+	ev "github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 const (
@@ -32,13 +33,7 @@ func NewBoid(x, y float64, targetCenter vector.Vec2) *Boid {
 }
 
 func (b *Boid) Draw(screen *ebiten.Image) {
-	boidImage := ebiten.NewImage(20, 20)
-	boidImage.Fill(color.White)
-
-	opts := &ebiten.DrawImageOptions{}
-	opts.GeoM.Translate(b.position.X, b.position.Y)
-
-	screen.DrawImage(boidImage, opts)
+	ev.DrawFilledCircle(screen, float32(b.position.X), float32(b.position.Y), 20, color.White, true)
 }
 
 func (b *Boid) Update(boids []*Boid) {
