@@ -1,11 +1,13 @@
 package boids
 
 import (
+	"fmt"
 	"image/color"
 	"math/rand"
 
 	"github.com/bioerrorlog/boids-ebitengine/vector"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 const (
@@ -48,6 +50,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, b := range g.boids {
 		b.Draw(screen)
 	}
+
+	// Debug
+	fps := fmt.Sprintf("FPS: %0.2f", ebiten.ActualFPS())
+	ebitenutil.DebugPrint(screen, fps)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
