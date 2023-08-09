@@ -33,7 +33,7 @@ func NewBoid(x, y float64, targetCenter vector.Vec2) *Boid {
 }
 
 func (b *Boid) Draw(screen *ebiten.Image) {
-	ev.DrawFilledCircle(screen, float32(b.position.X), float32(b.position.Y), 20, color.White, true)
+	ev.DrawFilledCircle(screen, float32(b.position.X), float32(b.position.Y), 20, color.RGBA{255, 148, 148, 0xff}, true)
 }
 
 func (b *Boid) Update(boids []*Boid) {

@@ -44,7 +44,7 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	// Backgroud
-	screen.Fill(color.RGBA{15, 2, 22, 0xff})
+	screen.Fill(color.RGBA{255, 245, 228, 0xff})
 
 	// Boids
 	for _, b := range g.boids {
