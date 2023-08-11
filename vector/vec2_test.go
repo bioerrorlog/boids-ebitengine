@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"math"
 	"testing"
 )
 
@@ -145,9 +146,11 @@ func TestVec2_Limit(t *testing.T) {
 		{"limit to length", Vec2{3, 4}, 3, Vec2{3 / 5.0 * 3, 4 / 5.0 * 3}},
 		{"limit with zero vector", Vec2{0, 0}, 5, Vec2{0, 0}},
 	}
+	const epsilon = 1e-9
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.v.Limit(tt.max); got != tt.want {
+			got := tt.v.Limit(tt.max)
+			if math.Abs(got.X-tt.want.X) > epsilon || math.Abs(got.Y-tt.want.Y) > epsilon {
 				t.Errorf("Vec2.Limit() = %v, want %v", got, tt.want)
 			}
 		})
