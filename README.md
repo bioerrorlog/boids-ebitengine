@@ -1,5 +1,7 @@
 # boids-ebitengine
 
+[![Test](https://github.com/bioerrorlog/boids-ebitengine/actions/workflows/test.yml/badge.svg)](https://github.com/bioerrorlog/boids-ebitengine/actions/workflows/test.yml)
+
 Boids flocking simulation with [Ebitengine](https://ebitengine.org/).
 
 ![demo](screenshots/demo.gif)
